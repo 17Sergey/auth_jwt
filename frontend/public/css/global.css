@@ -1,0 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #eee;
+}
+
+h1 {
+    font-family: 'Helvetica';
+}
