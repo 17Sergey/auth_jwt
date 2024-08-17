@@ -11,6 +11,7 @@ const configureCors = require('./middleware/configureCors');
 const rootRouter = require('./routes/root.routes');
 const authRouter = require('./routes/auth.routes');
 const refreshRouter = require('./routes/refresh.routes');
+const verifyToken = require('./middleware/verifyToken');
 
 const app = express();
 
@@ -36,6 +37,14 @@ app.use(configureCors());
 app.use('/', rootRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/refresh', refreshRouter);
+
+app.use(verifyToken);
+app.get('/api/music', async (req, res) => {
+    res.status(200).json({ message: 'Music' });
+});
+app.get('/api/movies', async (req, res) => {
+    res.status(200).json({ message: 'Movies' });
+});
 
 app.get('/*', async (req, res) => {
     res.status(404).sendFile(path.join(__dirname, '../', 'frontend', 'views', '404.html'));

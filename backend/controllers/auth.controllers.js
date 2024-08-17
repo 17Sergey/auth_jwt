@@ -64,7 +64,7 @@ const login = async (req, res) => {
             const refreshToken = jwt.sign(
                 { username: existingUser.username },
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '5d' }
+                { expiresIn: '1d' }
             );
 
             const otherUsers = usersDB.users.filter(
@@ -78,7 +78,12 @@ const login = async (req, res) => {
             );
 
             // Generate cookies
-            res.cookie('jwt2', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie('jwt2', refreshToken, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                sameSite: 'strict', // CSRF attacks
+                secure: process.env.NODE_ENV !== 'development', // true in production
+            });
             return res.status(200).json({ username, accessToken });
         } else {
             return res.status(401).json({ error: 'Wrong username or password provided' });
