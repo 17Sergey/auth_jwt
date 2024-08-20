@@ -38,12 +38,26 @@ app.use('/', rootRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/refresh', refreshRouter);
 
-app.use(verifyToken);
 app.get('/api/music', async (req, res) => {
-    res.status(200).json({ message: 'Music' });
-});
-app.get('/api/movies', async (req, res) => {
-    res.status(200).json({ message: 'Movies' });
+    res.status(200).json({
+        songs: [
+            {
+                id: 1,
+                artist: 'Miyagi',
+                name: 'Половина моя',
+            },
+            {
+                id: 2,
+                artist: 'Ария',
+                name: 'Потерянный рай',
+            },
+            {
+                id: 3,
+                artist: 'Miyagi',
+                name: 'Наполняй',
+            },
+        ],
+    });
 });
 
 app.get('/*', async (req, res) => {
