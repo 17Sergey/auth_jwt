@@ -11,6 +11,7 @@ const configureCors = require('./middleware/configureCors');
 const rootRouter = require('./routes/root.routes');
 const authRouter = require('./routes/auth.routes');
 const refreshRouter = require('./routes/refresh.routes');
+const profileRouter = require('./routes/profile.routes');
 const verifyToken = require('./middleware/verifyToken');
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(configureCors());
 
 app.use('/', rootRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/profile', profileRouter);
 app.use('/api/refresh', refreshRouter);
 
 app.get('/api/music', async (req, res) => {

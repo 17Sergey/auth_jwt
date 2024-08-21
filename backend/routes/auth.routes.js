@@ -5,12 +5,12 @@ const verifyToken = require('../middleware/verifyToken.js');
 
 const router = express.Router();
 
-router.post('/signup2', signUp);
+router.post('/signup', signUp);
 
-router.post('/login2', login);
+router.post('/login', login);
 
-router.post('/logout2', logout);
+router.post('/logout', logout);
 
-router.get('/me2', verifyToken, getMe);
+router.get('/me', verifyToken, getMe);
 
 module.exports = router;

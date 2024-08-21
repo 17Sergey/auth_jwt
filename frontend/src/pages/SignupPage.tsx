@@ -36,7 +36,7 @@ export default function SignupPage() {
             <h1>Регистрация</h1>
             <form
                 onSubmit={handleSubmit}
-                className="mt-8 flex flex-col gap-4 p-4 bg-blue-400 rounded-xl"
+                className="mt-8 flex flex-col gap-4 p-4 bg-blue-400 rounded-xl max-w-96 mx-auto"
             >
                 <label
                     className={`flex flex-col items-start gap-2`}
