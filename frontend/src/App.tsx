@@ -4,47 +4,51 @@ import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
-import { createContext, useState } from 'react';
 
-export type UserContextType = {
-    user: {
-        username: string;
-        accessToken?: string;
-    } | null;
-    setUser: React.Dispatch<React.SetStateAction<UserContextType['user']>>;
-};
+import ProtectedRoutes from './components/protectRoutes/ProtectedRoutes';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export type UserType = {
-    username: string;
-    accessToken?: string;
-};
-
-export const UserContext = createContext<UserContextType | null>(null);
+import { authAPI } from './api/authAPI';
+import { Spin } from 'antd';
 
 function App() {
-    const [user, setUser] = useState<UserType | null>(null);
+    const queryClient = useQueryClient();
+
+    const cachedData = queryClient.getQueryData(['userAuth']);
+    console.log(cachedData);
+
+    const { data: userAuth, isPending } = useQuery({
+        queryKey: ['userAuth'],
+        queryFn: () => {
+            const userAuth = queryClient.getQueryData(['userAuth']);
+            return authAPI.getMe(userAuth.accessToken);
+        },
+        retry: false,
+    });
+
+    if (isPending) return <Spin size="large" />;
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
-            <Routes>
+        <Routes>
+            <Route element={<ProtectedRoutes />}>
                 <Route
                     path="/"
                     element={<HomePage />}
                 />
                 <Route
-                    path="/signup"
-                    element={<SignupPage />}
-                />
-                <Route
-                    path="/login"
-                    element={<LoginPage />}
-                />
-                <Route
-                    path="/profile/:username?"
+                    path="/profile"
                     element={<ProfilePage />}
                 />
-            </Routes>
-        </UserContext.Provider>
+            </Route>
+            <Route
+                path="/signup"
+                element={<SignupPage />}
+            />
+            <Route
+                path="/login"
+                element={<LoginPage />}
+            />
+        </Routes>
     );
 }
 

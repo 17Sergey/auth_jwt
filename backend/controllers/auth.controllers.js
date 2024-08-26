@@ -82,7 +82,6 @@ const login = async (req, res) => {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 sameSite: 'strict', // CSRF attacks
-                secure: process.env.NODE_ENV !== 'development', // true in production
             });
             return res.status(200).json({ username, accessToken });
         } else {
@@ -130,8 +129,8 @@ const logout = async (req, res) => {
 };
 
 const getMe = async (req, res) => {
-    const username = req.username;
-    return res.status(200).json({ username });
+    const user = req.user;
+    return res.status(200).json(user);
 };
 
 module.exports = { signUp, login, logout, getMe };

@@ -1,7 +1,8 @@
-import axios from 'axios';
-import { Navigate } from 'react-router-dom';
-import { ChangeEvent, FormEvent, useContext, useState } from 'react';
-import { UserContext } from '../App';
+import { ChangeEvent, FormEvent, useState } from 'react';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { authAPI } from '../api/authAPI';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
@@ -9,27 +10,38 @@ export default function LoginPage() {
         password: '',
     });
 
-    const { user, setUser } = useContext(UserContext);
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const response = await axios.post('http://localhost:5500/api/auth/login', formData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.status === 200) {
-            setUser(response.data);
-        }
-    };
-
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    if (user) return <Navigate to={`/profile/${user.username}`} />;
+    const navigate = useNavigate();
+
+    const queryClient = useQueryClient();
+
+    const {
+        mutate: loginMutation,
+        isPending,
+        isError,
+        error,
+    } = useMutation({
+        mutationFn: () => authAPI.login(formData),
+        onSuccess(data) {
+            queryClient.setQueryData(['userAuth'], data);
+            navigate('/profile');
+        },
+        onError(error) {
+            // TODO: Error not displayed
+            console.log(error.message);
+        },
+        retry: 0,
+    });
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        loginMutation();
+    };
+
+    if (isPending) return <p>Loading...</p>;
 
     return (
         <div>
@@ -64,6 +76,7 @@ export default function LoginPage() {
                         onChange={handleInputChange}
                     />
                 </label>
+                {isError && <p>Error...{error.message}</p>}
                 <button type="submit">Зарегистрироваться</button>
             </form>
         </div>

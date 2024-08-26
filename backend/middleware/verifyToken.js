@@ -5,7 +5,6 @@ const usersDB = require('../models/users.json');
 const verifyToken = (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
-        console.log(authHeader);
 
         if (!authHeader)
             return res.status(401).json({ error: 'Unauthorized: No auth header provided' });
@@ -23,7 +22,7 @@ const verifyToken = (req, res, next) => {
         const user = usersDB.find((user) => user.username === decoded.username);
         if (!user) return res.status(401).json({ error: 'Unauthorized: username does not exist' });
 
-        req.username = user.username;
+        req.user = user;
         next();
     } catch (error) {
         console.log('Error in verifyToken: ' + error.message);

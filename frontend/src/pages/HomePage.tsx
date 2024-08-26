@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { Audio } from 'react-loader-spinner';
 import axios from 'axios';
+import { authAPI } from '../api/authAPI';
 
 const fetchData = async (page: number) => {
     // const response = await axios.get('http://localhost:5500/api/music');
