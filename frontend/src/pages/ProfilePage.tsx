@@ -24,29 +24,9 @@ export default function ProfilePage() {
         },
     });
 
-    console.log('Profile');
-
-    const { data: tokens, refetch } = useQuery({
-        queryKey: ['refresh'],
-        queryFn: authAPI.refresh,
-        enabled: false,
-    });
-
-    console.log(tokens);
-
-    const handleRefresh = () => {
-        refetch();
-    };
-
     return (
         <div>
             <h1>Профиль</h1>
-            <button
-                className="mt-4"
-                onClick={handleRefresh}
-            >
-                Refresh
-            </button>
             {profile && (
                 <div>
                     <h2 className="text-xl mt-8">{profile?.username}</h2>

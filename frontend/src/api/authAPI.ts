@@ -1,12 +1,18 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const signUp = async () => {};
 
-const login = async (formData) => {
+type LogInFormData = {
+    username: string;
+    password: string;
+};
+
+const login = async (formData: LogInFormData) => {
     const response = await axios.post('http://localhost:5500/api/auth/login', formData, {
         headers: {
             'Content-Type': 'application/json',
         },
+        withCredentials: true,
     });
 
     if (response.status === 200) {
@@ -21,16 +27,15 @@ const getMe = async (accessToken: string) => {
         },
     });
 
-    console.log(profileResponse);
     if (profileResponse.status === 200) {
         return { ...profileResponse.data, accessToken };
     }
 };
 
 const refresh = async () => {
-    const refreshResponse = await axios.get(`http://localhost:5500/api/refresh`);
-
-    console.log(refreshResponse);
+    const refreshResponse = await axios.get(`http://localhost:5500/api/refresh`, {
+        withCredentials: true,
+    });
 
     if (refreshResponse.status === 200) {
         return refreshResponse.data;

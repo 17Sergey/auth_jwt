@@ -24,7 +24,7 @@ export default function LoginPage() {
         isError,
         error,
     } = useMutation({
-        mutationFn: () => authAPI.login(formData),
+        mutationFn: authAPI.login,
         onSuccess(data) {
             queryClient.setQueryData(['userAuth'], data);
             navigate('/profile');
@@ -38,7 +38,7 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        loginMutation();
+        loginMutation(formData);
     };
 
     if (isPending) return <p>Loading...</p>;

@@ -1,12 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const path = require('path');
 
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler');
-const configureCors = require('./middleware/configureCors');
+const corsOptions = require('./config/corsOptions');
 
 const rootRouter = require('./routes/root.routes');
 const authRouter = require('./routes/auth.routes');
@@ -20,7 +21,7 @@ dotenv.config();
 
 // Middleware
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
@@ -31,7 +32,7 @@ app.use('/', express.static(path.join(__dirname, '../', '/frontend', '/public'))
 app.use(logger);
 
 // Cross Origin Resource Sharing
-app.use(configureCors());
+app.use(cors(corsOptions));
 
 // Routes
 
