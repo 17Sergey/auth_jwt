@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { Audio } from 'react-loader-spinner';
 import axios from 'axios';
-import { authAPI } from '../api/authAPI';
 
 const fetchData = async (page: number) => {
     // const response = await axios.get('http://localhost:5500/api/music');
@@ -28,12 +27,14 @@ export default function HomePage() {
 
     if (isLoading)
         return (
-            <Audio
-                height="80"
-                width="80"
-                color="green"
-                ariaLabel="loading"
-            />
+            <div className="w-full h-screen flex place-items-center">
+                <Audio
+                    height="80"
+                    width="80"
+                    color="green"
+                    ariaLabel="loading"
+                />
+            </div>
         );
 
     if (error) return <p>An error has occurred: {error.message}</p>;
@@ -60,24 +61,26 @@ export default function HomePage() {
                             <td className="p-4">Name</td>
                             <td className="p-4">Price</td>
                         </tr>
-                        {data.result.map((item) => {
-                            return (
-                                <tr
-                                    key={item.name}
-                                    className=""
-                                >
-                                    <td className="p-4">{item.id}</td>
-                                    <td className="p-4 flex gap-2">
-                                        <img
-                                            className="w-10 h-10"
-                                            src={item.icon}
-                                        />
-                                        {item.name}
-                                    </td>
-                                    <td className="p-4">{item.price}</td>
-                                </tr>
-                            );
-                        })}
+                        {data.result.map(
+                            (item: { id: number; name: string; icon: string; price: string }) => {
+                                return (
+                                    <tr
+                                        key={item.name}
+                                        className=""
+                                    >
+                                        <td className="p-4">{item.id}</td>
+                                        <td className="p-4 flex gap-2">
+                                            <img
+                                                className="w-10 h-10"
+                                                src={item.icon}
+                                            />
+                                            {item.name}
+                                        </td>
+                                        <td className="p-4">{item.price}</td>
+                                    </tr>
+                                );
+                            }
+                        )}
                     </tbody>
                 </table>
             </div>

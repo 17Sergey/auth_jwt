@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { UserType } from '../utils/types';
 
 export default function SignupPage() {
     const [formData, setFormData] = useState({
@@ -6,7 +7,7 @@ export default function SignupPage() {
         password: '',
     });
 
-    const [userData, setUserData] = useState<{ username: string } | null>(null);
+    const [userData, setUserData] = useState<UserType | null>(null);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -23,6 +24,9 @@ export default function SignupPage() {
 
         if (response.ok) {
             const data = await response.json();
+
+            console.log(userData);
+
             setUserData(data);
         }
     };
